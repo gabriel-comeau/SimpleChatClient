@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/nsf/termbox-go"
-	"github.com/gabriel-comeau/termbox-uikit"
+	"github.com/gabriel-comeau/tbuikit"
 )
 
 // Holds the event handler callbacks and rectangle calculation callbacks for
@@ -14,7 +14,7 @@ import (
 
 // Switches between selectable widgets on the screen when fired.
 func switchConnectScreenActiveWidget(uiElement interface{}, event interface{}) {
-	scr, ok := uiElement.(*termbox-uikit.Screen)
+	scr, ok := uiElement.(*tbuikit.Screen)
 	if ok {
 		scr.SelectNextWidget()
 	}

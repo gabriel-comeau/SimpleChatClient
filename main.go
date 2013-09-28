@@ -5,20 +5,20 @@ import (
 	"fmt"
 	"github.com/nsf/termbox-go"
 	"github.com/gabriel-comeau/SimpleChatCommon"
-	"github.com/gabriel-comeau/termbox-uikit"
+	"github.com/gabriel-comeau/tbuikit"
 	"net"
 )
 
 var (
-	chatBuffer       *termbox-uikit.TextInputBuffer
-	hostFieldBuffer  *termbox-uikit.TextInputBuffer
-	portFieldBuffer  *termbox-uikit.TextInputBuffer
-	nickFieldBuffer  *termbox-uikit.TextInputBuffer
-	connectMsgBuffer *termbox-uikit.ColorizedStringBuffer
-	messageBuffer    *termbox-uikit.ColorizedStringBuffer
-	chatUi           *termbox-uikit.UI
-	mainScreen       *termbox-uikit.Screen
-	connectScreen    *termbox-uikit.Screen
+	chatBuffer       *tbuikit.TextInputBuffer
+	hostFieldBuffer  *tbuikit.TextInputBuffer
+	portFieldBuffer  *tbuikit.TextInputBuffer
+	nickFieldBuffer  *tbuikit.TextInputBuffer
+	connectMsgBuffer *tbuikit.ColorizedStringBuffer
+	messageBuffer    *tbuikit.ColorizedStringBuffer
+	chatUi           *tbuikit.UI
+	mainScreen       *tbuikit.Screen
+	connectScreen    *tbuikit.Screen
 	netChatChan      chan string
 	netMessageChan   chan string
 	connected        *ConnectionStatus
@@ -29,15 +29,15 @@ var (
 // sent/recieved from the network and printed to the screen via
 // the widgets.
 func initBuffers() {
-	chatBuffer = new(termbox-uikit.TextInputBuffer)
-	hostFieldBuffer = new(termbox-uikit.TextInputBuffer)
-	portFieldBuffer = new(termbox-uikit.TextInputBuffer)
-	nickFieldBuffer = new(termbox-uikit.TextInputBuffer)
+	chatBuffer = new(tbuikit.TextInputBuffer)
+	hostFieldBuffer = new(tbuikit.TextInputBuffer)
+	portFieldBuffer = new(tbuikit.TextInputBuffer)
+	nickFieldBuffer = new(tbuikit.TextInputBuffer)
 	hostFieldBuffer.SetLength(32)
 	portFieldBuffer.SetLength(8)
 	nickFieldBuffer.SetLength(24)
-	messageBuffer = new(termbox-uikit.ColorizedStringBuffer)
-	connectMsgBuffer = new(termbox-uikit.ColorizedStringBuffer)
+	messageBuffer = new(tbuikit.ColorizedStringBuffer)
+	connectMsgBuffer = new(tbuikit.ColorizedStringBuffer)
 	messageBuffer.Prepare(64)
 	connectMsgBuffer.Prepare(64)
 }
@@ -78,7 +78,7 @@ func connect() {
 
 	// display the error in the message window of the connect screen
 	if err != nil {
-		connectMsg := new(termbox-uikit.ColorizedString)
+		connectMsg := new(tbuikit.ColorizedString)
 		connectMsg.Color = termbox.ColorRed
 		connectMsg.Text = err.Error()
 		connectMsgBuffer.Add(connectMsg)
@@ -115,7 +115,7 @@ func disconnect() {
 		connected.Disconnect()
 
 		// Prepare a message for the user in the connect screen message window
-		disconnectMsg := new(termbox-uikit.ColorizedString)
+		disconnectMsg := new(tbuikit.ColorizedString)
 		disconnectMsg.Color = termbox.ColorRed
 		disconnectMsg.Text = "Disconnected from server!"
 		connectMsgBuffer.Add(disconnectMsg)

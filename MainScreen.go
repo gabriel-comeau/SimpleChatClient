@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/nsf/termbox-go"
-	"github.com/gabriel-comeau/termbox-uikit"
+	"github.com/gabriel-comeau/tbuikit"
 )
 
 // Holds the event handler callbacks and rectangle calculation callbacks for
@@ -21,7 +21,7 @@ func doDisconnect(uiElement, event interface{}) {
 
 // Handles enter key presses for chat input widget
 func chatEnterHandler(uiElement, event interface{}) {
-	widget, ok := uiElement.(*termbox-uikit.TextInputWidget)
+	widget, ok := uiElement.(*tbuikit.TextInputWidget)
 	if ok {
 		netChatChan <- widget.GetBuffer().ReturnAndClear() + "\n"
 	}
@@ -33,7 +33,7 @@ func chatEnterHandler(uiElement, event interface{}) {
 
 // Top title bar
 func calculateTopTitleBar() (x1, x2, y1, y2 int) {
-	w := termbox-uikit.GetTermboxWidth()
+	w := tbuikit.GetTermboxWidth()
 	x1 = 1
 	x2 = w - 1
 	y1 = 1
