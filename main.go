@@ -3,10 +3,11 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"github.com/nsf/termbox-go"
 	"github.com/gabriel-comeau/SimpleChatCommon"
 	"github.com/gabriel-comeau/tbuikit"
+	"github.com/nsf/termbox-go"
 	"net"
+	"strings"
 )
 
 var (
@@ -16,6 +17,7 @@ var (
 	nickFieldBuffer  *tbuikit.TextInputBuffer
 	connectMsgBuffer *tbuikit.ColorizedStringBuffer
 	messageBuffer    *tbuikit.ColorizedStringBuffer
+	whoBuffer        *tbuikit.ColorizedStringBuffer
 	chatUi           *tbuikit.UI
 	mainScreen       *tbuikit.Screen
 	connectScreen    *tbuikit.Screen
@@ -37,6 +39,7 @@ func initBuffers() {
 	portFieldBuffer.SetLength(8)
 	nickFieldBuffer.SetLength(24)
 	messageBuffer = new(tbuikit.ColorizedStringBuffer)
+	whoBuffer = new(tbuikit.ColorizedStringBuffer)
 	connectMsgBuffer = new(tbuikit.ColorizedStringBuffer)
 	messageBuffer.Prepare(64)
 	connectMsgBuffer.Prepare(64)
@@ -156,7 +159,11 @@ func addChatMessagesToBuffer(netMessageChan chan string) {
 		if connected.Connected() {
 			rcvdStr := <-netMessageChan
 			msg := SimpleChatCommon.Unpack(rcvdStr)
-			messageBuffer.Add(msg)
+			if SimpleChatCommon.IsWhoMessage(msg) {
+				processWhoMessage(msg)
+			} else {
+				messageBuffer.Add(msg)
+			}
 		}
 	}
 }
@@ -186,6 +193,26 @@ func sendChatMessages(netChatChan chan string) {
 		if connected.Connected() {
 			msg := <-netChatChan
 			conn.Write([]byte(msg))
+		}
+	}
+}
+
+// Takes the "whos online" message from the server, splits it into the appropriate parts
+// and writes it to the who buffer.  Clears the who buffer first
+func processWhoMessage(msg *tbuikit.ColorizedString) {
+
+	colors := new(SimpleChatCommon.ColorList)
+
+	// Each who message starts with the special token, so strip it off
+	raw := msg.Text
+	trimmed := strings.Trim(raw, " \n")
+	parts := strings.Split(trimmed, SimpleChatCommon.WHO_MESSAGE_TOKEN)
+	if len(parts) > 0 {
+		whoBuffer.Clear()
+		for _, part := range parts {
+			col := colors.FromColor(msg.Color)
+			bufMsg := SimpleChatCommon.Create(part, col)
+			whoBuffer.Add(bufMsg)
 		}
 	}
 }

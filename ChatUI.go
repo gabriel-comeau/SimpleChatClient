@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/nsf/termbox-go"
 	"github.com/gabriel-comeau/tbuikit"
+	"github.com/nsf/termbox-go"
 )
 
 // How far down the top bar with the title goes
@@ -34,11 +34,19 @@ func initMainScreenWidgets() {
 	messageWidget := tbuikit.CreateColorizedTextWidget(termbox.ColorWhite, termbox.ColorWhite,
 		termbox.ColorDefault, calculateMessageBufferRect, messageBuffer)
 
+	whoWidget := tbuikit.CreateColorizedTextWidget(termbox.ColorWhite, termbox.ColorWhite,
+		termbox.ColorDefault, calculateWhoRect, whoBuffer)
+
+	whoLabel := tbuikit.CreateLabelWidget("Online Users:", true, tbuikit.CENTER,
+		termbox.ColorYellow, termbox.ColorDefault, termbox.ColorWhite, calculateWhoLabelRect)
+
 	chatInputWidget.UseDefaultKeys(true)
 	chatInputWidget.AddSpecialKeyCallback(termbox.KeyEnter, chatEnterHandler)
 
 	mainScreen.AddWidget(topTitleBar)
 	mainScreen.AddWidget(messageWidget)
+	mainScreen.AddWidget(whoLabel)
+	mainScreen.AddWidget(whoWidget)
 	mainScreen.AddWidget(chatInputWidget)
 
 	mainScreen.AddSpecialKeyCallback(termbox.KeyEsc, doDisconnect)
